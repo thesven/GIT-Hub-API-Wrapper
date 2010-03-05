@@ -32,7 +32,7 @@ package com.thesven.githubwrapper {
 				throw new Error('GitHubWrapper is a singleton. Please use the getInstance() method.');
 			} else {
 				
-				authenticatedUserInfo = new Signal(Object);
+				authenticatedUserInfo = new Signal(String);
 			}
 		}
 		
@@ -44,7 +44,7 @@ package com.thesven.githubwrapper {
 			_token = userToken;	
 		}
 		
-		public function loadAuthenticatedUserInfo(){
+		public function loadAuthenticatedUserInfo():void{
 			var url:String = USER_INFO_URL + _loginName;
 			_doAuthenticatedLoad(url, authenticatedUserInfoLoaded);
 		}
@@ -79,6 +79,6 @@ package com.thesven.githubwrapper {
 		protected function _changeLoadedTextToJSONObject(text:String):Object{
 			return new Object();
 		}
-			
+
 	}
 }
