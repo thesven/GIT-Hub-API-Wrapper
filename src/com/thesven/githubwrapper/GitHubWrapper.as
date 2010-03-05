@@ -20,7 +20,7 @@ package com.thesven.githubwrapper {
 		
 		public    var    authenticatedUserInfo:Signal;
 		
-		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/xml/user/show/';
+		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/json/user/show/';
 		
 		public static function getInstance():GitHubWrapper{
 			return _gitHubWrapper;	
@@ -76,7 +76,7 @@ package com.thesven.githubwrapper {
 		}
 		
 		protected function _changeLoadedTextToJSONObject(text:String):Object{
-			return new Object();
+			
 		}
 
 	}
