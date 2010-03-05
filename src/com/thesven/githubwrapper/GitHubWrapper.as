@@ -21,8 +21,10 @@ package com.thesven.githubwrapper {
 		protected var   _token:String;
 		
 		public    var    authenticatedUserInfo:Signal;
+		public    var    searchingForUsers:Signal;
 		
 		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/json/user/show/';
+		protected static const   USER_SEARCH_URL:String = 'http://github.com/api/v2/json/user/search/';
 		
 		public static function getInstance():GitHubWrapper{
 			return _gitHubWrapper;	
@@ -32,8 +34,8 @@ package com.thesven.githubwrapper {
 			if(_gitHubWrapper) {	
 				throw new Error('GitHubWrapper is a singleton. Please use the getInstance() method.');
 			} else {
-				
 				authenticatedUserInfo = new Signal(Object);
+				searchingForUsers = new Signal(Object);
 			}
 		}
 		
@@ -52,6 +54,15 @@ package com.thesven.githubwrapper {
 
 		protected function authenticatedUserInfoLoaded(e:Event):void {
 			authenticatedUserInfo.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
+		}
+		
+		public function searchForUsers(userNameToSearchFor:String):void{
+			var url:String = USER_SEARCH_URL + userNameToSearchFor;
+			_doAuthenticatedLoad(url, searchForUsersLoaded);
+		}
+		
+		protected function searchForUsersLoaded(e:Event):void {
+			searchingForUsers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 
 		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
