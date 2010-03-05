@@ -1,6 +1,6 @@
 package com.thesven.githubwrapper {
-	import com.adobe.serialization.json.JSONEncoder;
 	import com.adobe.serialization.json.JSON;
+
 	import org.osflash.signals.Signal;
 
 	import flash.events.Event;
