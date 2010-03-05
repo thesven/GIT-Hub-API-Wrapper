@@ -22,6 +22,7 @@ package com.thesven.githubwrapper {
 		
 		public    var    authenticatedUserInfo:Signal;
 		public    var    searchingForUsers:Signal;
+		public    var    getFollowers:Signal;
 		
 		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/json/user/show/';
 		protected static const   USER_SEARCH_URL:String = 'http://github.com/api/v2/json/user/search/';
@@ -36,6 +37,7 @@ package com.thesven.githubwrapper {
 			} else {
 				authenticatedUserInfo = new Signal(Object);
 				searchingForUsers = new Signal(Object);
+				getFollowers = new Signal(Object);
 			}
 		}
 		
@@ -63,6 +65,15 @@ package com.thesven.githubwrapper {
 		
 		protected function searchForUsersLoaded(e:Event):void {
 			searchingForUsers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
+		}
+		
+		public function getUsersFollowers():void{
+			var url:String = USER_INFO_URL + _loginName + "/followers";
+			_doAuthenticatedLoad(url, getUsersFollowersLoaded);
+		}
+
+		private function getUsersFollowersLoaded(e:Event) : void {
+			getFollowers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 
 		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
