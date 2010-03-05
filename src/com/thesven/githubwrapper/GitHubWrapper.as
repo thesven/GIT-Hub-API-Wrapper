@@ -1,5 +1,4 @@
 package com.thesven.githubwrapper {
-	import mx.utils.ObjectProxy;
 	import org.osflash.signals.Signal;
 
 	import flash.events.Event;
