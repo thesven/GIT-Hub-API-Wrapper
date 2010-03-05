@@ -1,4 +1,5 @@
 package com.thesven.githubwrapper {
+	import flash.events.SecurityErrorEvent;
 	import com.adobe.serialization.json.JSON;
 
 	import org.osflash.signals.Signal;
@@ -23,6 +24,7 @@ package com.thesven.githubwrapper {
 		public    var    authenticatedUserInfo:Signal;
 		public    var    searchingForUsers:Signal;
 		public    var    getFollowers:Signal;
+		public    var    getFollowing:Signal;
 		
 		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/json/user/show/';
 		protected static const   USER_SEARCH_URL:String = 'http://github.com/api/v2/json/user/search/';
@@ -38,6 +40,7 @@ package com.thesven.githubwrapper {
 				authenticatedUserInfo = new Signal(Object);
 				searchingForUsers = new Signal(Object);
 				getFollowers = new Signal(Object);
+				getFollowing = new Signal(Object);
 			}
 		}
 		
@@ -91,8 +94,12 @@ package com.thesven.githubwrapper {
 			loader.dataFormat = URLLoaderDataFormat.TEXT;
 			loader.addEventListener(Event.COMPLETE, onCompleteFunctoin);
 			loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
+			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
 			loader.load(request);
-			
+		}
+
+		protected function _loaderSecurityError(e : SecurityErrorEvent) : void {
+			throw new Error('There was a security error while requesting your info ::', e.text);
 		}
 
 		protected function _loaderIOError(e : IOErrorEvent) : void {
