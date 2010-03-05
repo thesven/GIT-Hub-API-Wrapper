@@ -1,4 +1,6 @@
 package com.thesven.githubwrapper {
+	import com.adobe.serialization.json.JSONEncoder;
+	import com.adobe.serialization.json.JSON;
 	import org.osflash.signals.Signal;
 
 	import flash.events.Event;
@@ -31,7 +33,7 @@ package com.thesven.githubwrapper {
 				throw new Error('GitHubWrapper is a singleton. Please use the getInstance() method.');
 			} else {
 				
-				authenticatedUserInfo = new Signal(String);
+				authenticatedUserInfo = new Signal(Object);
 			}
 		}
 		
@@ -49,7 +51,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function authenticatedUserInfoLoaded(e:Event):void {
-			authenticatedUserInfo.dispatch( (e.target as URLLoader).data );
+			authenticatedUserInfo.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 
 		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
@@ -75,8 +77,8 @@ package com.thesven.githubwrapper {
 			throw new Error('There was an error loading your requesting information ::', e.text);
 		}
 		
-		protected function _changeLoadedTextToJSONObject(text:String):Object{
-			
+		protected function _decodeAsJSONObject(text:String):Object{
+			return JSON.decode(text);
 		}
 
 	}
