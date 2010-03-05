@@ -1,4 +1,7 @@
 package com.thesven.githubwrapper {
+	import mx.utils.ObjectProxy;
+	import org.osflash.signals.Signal;
+
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
@@ -16,6 +19,10 @@ package com.thesven.githubwrapper {
 		protected var   _loginName:String;
 		protected var   _token:String;
 		
+		public    var    authenticatedUserInfo:Signal;
+		
+		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/xml/user/show/';
+		
 		public static function getInstance():GitHubWrapper{
 			return _gitHubWrapper;	
 		}
@@ -23,6 +30,9 @@ package com.thesven.githubwrapper {
 		public function GitHubWrapper(){
 			if(_gitHubWrapper) {	
 				throw new Error('GitHubWrapper is a singleton. Please use the getInstance() method.');
+			} else {
+				
+				authenticatedUserInfo = new Signal(Object);
 			}
 		}
 		
@@ -34,7 +44,16 @@ package com.thesven.githubwrapper {
 			_token = userToken;	
 		}
 		
-		protected function doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
+		public function loadAuthenticatedUserInfo(){
+			var url:String = USER_INFO_URL + _loginName;
+			_doAuthenticatedLoad(url, authenticatedUserInfoLoaded);
+		}
+
+		protected function authenticatedUserInfoLoaded(e:Event):void {
+			authenticatedUserInfo.dispatch( (e.target as URLLoader).data );
+		}
+
+		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
 			
 			var baseURL:String = urlToUse;
 			
@@ -53,8 +72,13 @@ package com.thesven.githubwrapper {
 			
 		}
 
-		private function _loaderIOError(e : IOErrorEvent) : void {
+		protected function _loaderIOError(e : IOErrorEvent) : void {
 			throw new Error('There was an error loading your requesting information ::', e.text);
 		}
+		
+		protected function _changeLoadedTextToJSONObject(text:String):Object{
+			return new Object();
+		}
+			
 	}
 }
