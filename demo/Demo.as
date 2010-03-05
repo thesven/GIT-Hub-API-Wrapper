@@ -13,11 +13,17 @@ package {
 			GitHubWrapper.getInstance().loginName = 'thesven';
 			GitHubWrapper.getInstance().token = 'f11a1deff5e19497900c1bec558e88dc';
 			GitHubWrapper.getInstance().authenticatedUserInfo.add(ready);
-			GitHubWrapper.getInstance().searchingForUsers.add(usersFound);
-			GitHubWrapper.getInstance().getFollowers.add(followersFound);
 			//GitHubWrapper.getInstance().loadAuthenticatedUserInfo();
+			GitHubWrapper.getInstance().searchingForUsers.add(usersFound);
 			//GitHubWrapper.getInstance().searchForUsers('mpezzi');
-			GitHubWrapper.getInstance().getUsersFollowers();
+			GitHubWrapper.getInstance().getFollowers.add(followersFound);
+			//GitHubWrapper.getInstance().getUsersFollowers();
+			GitHubWrapper.getInstance().getFollowing.add(followingFound);
+			//GitHubWrapper.getInstance().getUsersFollowing();
+		}
+
+		private function followingFound(action:Object) : void {
+			trace(action);
 		}
 
 		private function followersFound(action:Object) : void {

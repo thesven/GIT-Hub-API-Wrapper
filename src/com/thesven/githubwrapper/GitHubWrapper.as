@@ -78,6 +78,15 @@ package com.thesven.githubwrapper {
 		private function getUsersFollowersLoaded(e:Event) : void {
 			getFollowers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
+		
+		public function getUsersFollowing():void{
+			var url:String = USER_INFO_URL + _loginName + "/following";
+			_doAuthenticatedLoad(url, getUserFollowingLoaded)
+		}
+
+		private function getUserFollowingLoaded(e:Event) : void {
+			getFollowing.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ));
+		}
 
 		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
 			
