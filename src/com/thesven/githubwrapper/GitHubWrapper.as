@@ -1,10 +1,10 @@
 package com.thesven.githubwrapper {
-	import com.dynamicflash.util.Base64;
-	import flash.utils.ByteArray;
-	import mx.utils.Base64Encoder;
-	import flash.net.URLRequestHeader;
-	import flash.net.URLRequest;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
+	import flash.net.URLLoaderDataFormat;
+	import flash.net.URLRequest;
+	import flash.net.URLVariables;
 
 	/**
 	 * @author michaelsvendsen
@@ -14,7 +14,7 @@ package com.thesven.githubwrapper {
 		private   static   var   _gitHubWrapper:GitHubWrapper = new GitHubWrapper();
 		
 		protected var   _loginName:String;
-		protected var   _loginPass:String;
+		protected var   _token:String;
 		
 		public static function getInstance():GitHubWrapper{
 			return _gitHubWrapper;	
@@ -30,24 +30,31 @@ package com.thesven.githubwrapper {
 			_loginName = userLoginName;
 		}
 		
-		public function set loginPass(userLoginPass:String):void {
-			_loginPass = userLoginPass;	
-		}
-
-		public function getAuthenticatedUserInformation():Object{
-			return new Object();
+		public function set token(userToken:String):void {
+			_token = userToken;	
 		}
 		
-		protected function doAuthenticatedLoad(urlToUse:String):void{
+		protected function doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
 			
 			var baseURL:String = urlToUse;
 			
-			var auth:String = _loginName + ":" + _loginPass;
-			var encodedAuth:String = Base64.encode(auth);
-			var creds:URLRequestHeader = new URLRequestHeader("Authorization", "Basic " + encodedAuth.toString());
+			var urlVars:URLVariables = new URLVariables();
+			urlVars.login = _loginName;
+			urlVars.token = _token;
 			
 			var request:URLRequest = new URLRequest(baseURL);
-			request.requestHeaders.push(creds);
+			request.data = urlVars;
+			
+			var loader:URLLoader = new URLLoader();
+			loader.dataFormat = URLLoaderDataFormat.TEXT;
+			loader.addEventListener(Event.COMPLETE, onCompleteFunctoin);
+			loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
+			loader.load(request);
+			
+		}
+
+		private function _loaderIOError(e : IOErrorEvent) : void {
+			throw new Error('There was an error loading your requesting information ::', e.text);
 		}
 	}
 }
