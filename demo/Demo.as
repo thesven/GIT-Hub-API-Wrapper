@@ -18,8 +18,11 @@ package {
 			GitHubWrapper.getInstance().authenticatedUserSignal.add(ready);
 			//GitHubWrapper.getInstance().getUserInfo();
 			
+			GitHubWrapper.getInstance().getInfoForUserSignal.add(userInfoFor);
+			//GitHubWrapper.getInstance().getUserInfoFor('{user name}');
+			
 			GitHubWrapper.getInstance().searchingForUsersSignal.add(usersFound);
-			//GitHubWrapper.getInstance().searchForUsers('mpezzi');
+			//GitHubWrapper.getInstance().searchForUsers('{user name}');
 			
 			GitHubWrapper.getInstance().getFollowersSignal.add(followersFound);
 			//GitHubWrapper.getInstance().getUsersFollowers();
@@ -30,11 +33,8 @@ package {
 			GitHubWrapper.getInstance().getWatchedReposSignal.add(watchedRepos);
 			//GitHubWrapper.getInstance().getUsersWatchedRepos();
 			
-			GitHubWrapper.getInstance().getInfoForUserSignal.add(userInfoFor);
-			//GitHubWrapper.getInstance().getUserInfoFor('mpezzi');
-			
 			GitHubWrapper.getInstance().searchPublicRepoSignal.add(searchRepo);
-			//GitHubWrapper.getInstance().searchPublicRepositories('Constant Contact');
+			//GitHubWrapper.getInstance().searchPublicRepositories('{search term}');
 		}
 
 		private function searchRepo(action:Object) : void {
