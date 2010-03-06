@@ -161,6 +161,7 @@ package com.thesven.githubwrapper {
 		}	
 
 		protected function searchPublicRepositoriesLoaded(e:Event) : void {
+			trace((e.target as URLLoader).data as String);
 			searchPublicRepoSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 

@@ -10,8 +10,8 @@ package {
 
 		public function Demo() {
 		
-			GitHubWrapper.getInstance().loginName = 'thesven';
-			GitHubWrapper.getInstance().token = 'f11a1deff5e19497900c1bec558e88dc';
+			GitHubWrapper.getInstance().loginName = '{your git hub user name}';
+			GitHubWrapper.getInstance().token = '{your git hub user token}';
 			
 			GitHubWrapper.getInstance().loadErrorSignal.add(loadError);
 			
@@ -32,6 +32,13 @@ package {
 			
 			GitHubWrapper.getInstance().getInfoForUserSignal.add(userInfoFor);
 			//GitHubWrapper.getInstance().getUserInfoFor('mpezzi');
+			
+			GitHubWrapper.getInstance().searchPublicRepoSignal.add(searchRepo);
+			//GitHubWrapper.getInstance().searchPublicRepositories('Constant Contact');
+		}
+
+		private function searchRepo(action:Object) : void {
+			trace(action);
 		}
 
 		private function loadError(action:String) : void {
