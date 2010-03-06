@@ -80,9 +80,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function authenticatedUserInfoLoaded(e:Event) : void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, authenticatedUserInfoLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), authenticatedUserInfoLoaded);
 			authenticatedUserSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
@@ -97,9 +95,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function userInfoLoaded(e:Event):void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, userInfoLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), userInfoLoaded);
 			getInfoForUserSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
@@ -114,9 +110,7 @@ package com.thesven.githubwrapper {
 		}
 		
 		protected function searchForUsersLoaded(e:Event):void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, searchForUsersLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), searchForUsersLoaded);
 			searchingForUsersSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 		
@@ -130,9 +124,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUsersFollowersLoaded(e:Event) : void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, getUsersFollowersLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), getUsersFollowersLoaded);
 			getFollowersSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
@@ -146,9 +138,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUserFollowingLoaded(e:Event) : void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, getUserFollowingLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), getUserFollowingLoaded);
 			getFollowingSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ));
 		}
 		
@@ -162,9 +152,7 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUsersWatchedReposLoaded(e:Event) : void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, getUsersWatchedReposLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), getUsersWatchedReposLoaded);
 			getWatchedReposSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data) );
 		}
 		
@@ -179,9 +167,7 @@ package com.thesven.githubwrapper {
 		}	
 
 		protected function searchPublicRepositoriesLoaded(e:Event) : void {
-			(e.target as URLLoader).addEventListener(Event.COMPLETE, searchPublicRepositoriesLoaded);
-			(e.target as URLLoader).removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
-			(e.target as URLLoader).removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
+			removeLoadListeners((e.target as URLLoader), searchPublicRepositoriesLoaded);
 			searchPublicRepoSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 
@@ -202,6 +188,12 @@ package com.thesven.githubwrapper {
 			loader.addEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
 			loader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
 			loader.load(request);
+		}
+		
+		protected function removeLoadListeners(target:URLLoader, loadFunc):void{
+			target.addEventListener(Event.COMPLETE, loadFunc);
+			target.removeEventListener(IOErrorEvent.IO_ERROR, _loaderIOError);
+			target.removeEventListener(SecurityErrorEvent.SECURITY_ERROR, _loaderSecurityError);
 		}
 
 		protected function _loaderSecurityError(e : SecurityErrorEvent) : void {
