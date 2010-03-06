@@ -21,16 +21,19 @@ package com.thesven.githubwrapper {
 		protected var   _loginName:String;
 		protected var   _token:String;
 		
-		public    var    authenticatedUserInfo:Signal;
-		public    var    searchingForUsers:Signal;
-		public    var    getFollowers:Signal;
-		public    var    getFollowing:Signal;
-		public    var    getWatchedRepos:Signal;
-		public    var    getInfoForUser:Signal;
+		public    var   authenticatedUserSignal:Signal;
+		public    var   searchingForUsersSignal:Signal;
+		public    var   getFollowersSignal:Signal;
+		public    var   getFollowingSignal:Signal;
+		public    var   getWatchedReposSignal:Signal;
+		public    var   getInfoForUserSignal:Signal;
+		public    var   loadErrorSignal:Signal;
+		public    var   searchPublicRepoSignal:Signal;
 		
 		protected static const   USER_INFO_URL:String = 'http://github.com/api/v2/json/user/show/';
 		protected static const   USER_SEARCH_URL:String = 'http://github.com/api/v2/json/user/search/';
 		protected static const   WATCHED_REPOS_URL:String = 'http://github.com/api/v2/json/repos/watched/';
+		protected static const   SEARCH_PUBLIC_REPO_URL:String = 'http://github.com/api/v2/json/repos/search/';
 		
 		public static function getInstance():GitHubWrapper{
 			return _gitHubWrapper;	
@@ -40,12 +43,14 @@ package com.thesven.githubwrapper {
 			if(_gitHubWrapper) {	
 				throw new Error('GitHubWrapper is a singleton. Please use the getInstance() method.');
 			} else {
-				authenticatedUserInfo = new Signal(Object);
-				searchingForUsers = new Signal(Object);
-				getFollowers = new Signal(Object);
-				getFollowing = new Signal(Object);
-				getWatchedRepos = new Signal(Object);
-				getInfoForUser = new Signal(Object);
+				authenticatedUserSignal = new Signal(Object);
+				searchingForUsersSignal = new Signal(Object);
+				getFollowersSignal = new Signal(Object);
+				getFollowingSignal = new Signal(Object);
+				getWatchedReposSignal = new Signal(Object);
+				getInfoForUserSignal = new Signal(Object);
+				loadErrorSignal = new Signal(String);
+				searchPublicRepoSignal = new Signal(Object);
 			}
 		}
 		
@@ -67,7 +72,7 @@ package com.thesven.githubwrapper {
 		
 		/*
 		 * used to get the information of the user whos login name and token you have supplied.
-		 * authenticatedUserInfo:Signal will dispatch with a JSON object containing the informaiton.
+		 * authenticatedUserInfoSignal:Signal will dispatch with a JSON object containing the informaiton.
 		 */
 		public function getUserInfo():void{
 			var url:String = USER_INFO_URL + _loginName;
@@ -75,13 +80,13 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function authenticatedUserInfoLoaded(e:Event) : void {
-			authenticatedUserInfo.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
+			authenticatedUserSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
 		/*
 		 * used to the the information for the user whos name is supplied in the parameters
 		 * @param name:String - the name of the user whos info you are searching for
-		 * getInfoForUser:Signal will dispatch with a JSON object containing the information.
+		 * getInfoForUserSignal:Signal will dispatch with a JSON object containing the information.
 		 */
 		public function getUserInfoFor(name:String):void{
 			var url:String = USER_INFO_URL + name;
@@ -89,14 +94,13 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function userInfoLoaded(e:Event):void {
-			trace(e.target.data);
-			getInfoForUser.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
+			getInfoForUserSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
 		/*
 		 * used to search for registered users on git hub
 		 * @param userNameToSearchForm:String - a string containing the letters or names you are searching for
-		 * serchingForUsers:Signal will dispatch with a JSON object containing the information.
+		 * serchingForUsersSignal:Signal will dispatch with a JSON object containing the information.
 		 */
 		public function searchForUsers(userNameToSearchFor:String):void{
 			var url:String = USER_SEARCH_URL + userNameToSearchFor;
@@ -104,12 +108,12 @@ package com.thesven.githubwrapper {
 		}
 		
 		protected function searchForUsersLoaded(e:Event):void {
-			searchingForUsers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
+			searchingForUsersSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 		
 		/*
 		 * used to get the infortion on the followers of the user whos login name and token were set
-		 * getFollowers:Signal will dispatch with a JSON object containing the information
+		 * getFollowersSignal:Signal will dispatch with a JSON object containing the information
 		 */
 		public function getUsersFollowers():void{
 			var url:String = USER_INFO_URL + _loginName + "/followers";
@@ -117,12 +121,12 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUsersFollowersLoaded(e:Event) : void {
-			getFollowers.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
+			getFollowersSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ) );
 		}
 		
 		/*
 		 * used to get the information on the people who being followed by the user whos login and token were set
-		 * getFollowing:Signal will dispatch with a JSON object containing the informaiton
+		 * getFollowingSignal:Signal will dispatch with a JSON object containing the informaiton
 		 */
 		public function getUsersFollowing():void{
 			var url:String = USER_INFO_URL + _loginName + "/following";
@@ -130,12 +134,12 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUserFollowingLoaded(e:Event) : void {
-			getFollowing.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ));
+			getFollowingSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data ));
 		}
 		
 		/*
 		 * used to get the repositores that are watched by the users whos login and token are set
-		 * getWatchedRepos will dispatch with a JSON object containing the information
+		 * getWatchedReposSignal:Signal will dispatch with a JSON object containing the information
 		 */
 		public function getUsersWatchedRepos():void{
 			var url:String = WATCHED_REPOS_URL + _loginName;
@@ -143,7 +147,21 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function getUsersWatchedReposLoaded(e:Event) : void {
-			getWatchedRepos.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data) );
+			getWatchedReposSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data) );
+		}
+		
+		/*
+		 * used to search public repositories by the term supplied though the parameters
+		 * @param searchTerm:String - the term you wish to use in your search
+		 * searchPublicRepoSignal will dispatch with a JSON object containing the information
+		 */
+		public function searchPublicRepositories(searchTerm:String):void{
+			var url:String = SEARCH_PUBLIC_REPO_URL + searchTerm;
+			_doAuthenticatedLoad(url, searchPublicRepositoriesLoaded);
+		}	
+
+		protected function searchPublicRepositoriesLoaded(e:Event) : void {
+			searchPublicRepoSignal.dispatch( _decodeAsJSONObject( (e.target as URLLoader).data));
 		}
 
 		protected function _doAuthenticatedLoad(urlToUse:String, onCompleteFunctoin:Function):void{
@@ -166,13 +184,13 @@ package com.thesven.githubwrapper {
 		}
 
 		protected function _loaderSecurityError(e : SecurityErrorEvent) : void {
-			throw new Error('There was a security error while requesting your info ::', e.text);
+			loadErrorSignal.dispatch(e.text);
 		}
 
 		protected function _loaderIOError(e : IOErrorEvent) : void {
-			throw new Error('There was an error loading your requesting information ::', e.text);
+			loadErrorSignal.dispatch(e.text);
 		}
-		
+
 		protected function _decodeAsJSONObject(text:String):Object{
 			return JSON.decode(text);
 		}

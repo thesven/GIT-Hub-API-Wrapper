@@ -12,18 +12,30 @@ package {
 		
 			GitHubWrapper.getInstance().loginName = 'thesven';
 			GitHubWrapper.getInstance().token = 'f11a1deff5e19497900c1bec558e88dc';
-			GitHubWrapper.getInstance().authenticatedUserInfo.add(ready);
+			
+			GitHubWrapper.getInstance().loadErrorSignal.add(loadError);
+			
+			GitHubWrapper.getInstance().authenticatedUserSignal.add(ready);
 			//GitHubWrapper.getInstance().getUserInfo();
-			GitHubWrapper.getInstance().searchingForUsers.add(usersFound);
+			
+			GitHubWrapper.getInstance().searchingForUsersSignal.add(usersFound);
 			//GitHubWrapper.getInstance().searchForUsers('mpezzi');
-			GitHubWrapper.getInstance().getFollowers.add(followersFound);
+			
+			GitHubWrapper.getInstance().getFollowersSignal.add(followersFound);
 			//GitHubWrapper.getInstance().getUsersFollowers();
-			GitHubWrapper.getInstance().getFollowing.add(followingFound);
+			
+			GitHubWrapper.getInstance().getFollowingSignal.add(followingFound);
 			//GitHubWrapper.getInstance().getUsersFollowing();
-			GitHubWrapper.getInstance().getWatchedRepos.add(watchedRepos);
+			
+			GitHubWrapper.getInstance().getWatchedReposSignal.add(watchedRepos);
 			//GitHubWrapper.getInstance().getUsersWatchedRepos();
-			GitHubWrapper.getInstance().getInfoForUser.add(userInfoFor);
-			GitHubWrapper.getInstance().getUserInfoFor('mpezzi');
+			
+			GitHubWrapper.getInstance().getInfoForUserSignal.add(userInfoFor);
+			//GitHubWrapper.getInstance().getUserInfoFor('mpezzi');
+		}
+
+		private function loadError(action:String) : void {
+			trace(action);
 		}
 
 		private function userInfoFor(action:Object) : void {
