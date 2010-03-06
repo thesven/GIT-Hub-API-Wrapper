@@ -18,4 +18,4 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-GitHubWrapper is a Singleton Class that connects to the Git Hub API and returns data back in JSON format. It requires the use of a valid git hub user name and token.
+GitHubWrapper is a Singleton Class that connects to the Git Hub API and returns data back in JSON format. It requires the use of a valid git hub user name and token. The GitHubWrapper class is using Robert Penner's as3 Signals library(http://github.com/robertpenner/as3-signals).
