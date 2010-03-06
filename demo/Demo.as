@@ -34,7 +34,7 @@ package {
 			//GitHubWrapper.getInstance().getUsersWatchedRepos();
 			
 			GitHubWrapper.getInstance().searchPublicRepoSignal.add(searchRepo);
-			//GitHubWrapper.getInstance().searchPublicRepositories('{search term}');
+			GitHubWrapper.getInstance().searchPublicRepositories('{search term}');
 		}
 
 		private function searchRepo(action:Object) : void {
